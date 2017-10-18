@@ -1,13 +1,13 @@
-# include "rtttl_lib.h"
+# include "RTTTL.h"
 
-#define _CHECK_EOS_(strNote) if(strNote=='\0') return RTTTL_ERR_INCOMPLETE_NOTE;
+#define _CHECK_EOS_(strNote) if(strNote=='\0') {Serial.println(":p"); return RTTTL_ERR_INCOMPLETE_NOTE;}
 
 RTTTL::RTTTL(char * melody, int buzzerPin)
 {
   m_melody      = melody;
   melody_title   = melody;
-  m_buzzerPin  = buzzerPin;
-  pinMode(m_buzzerPin, OUTPUT);
+  m_buzzer_pin  = buzzerPin;
+  pinMode(m_buzzer_pin, OUTPUT);
     
   int index=0;
   int totalstrLen= strlen(m_melody);
@@ -86,26 +86,27 @@ RTTTL::RTTTL(char * melody, int buzzerPin)
   if(index<totalstrLen)
   {
      m_notes=&m_melody[index+1];
+     m_noteLen=strlen(m_notes);
   }  
   m_notePointer = 0;
-  prev=millis();
+  m_prev_time=millis();
 }
 
 int RTTTL::getUnsignedInt(char *str, int *val)
 {
-            char strInt[4];
-            (*val)              = 0;
-            int index        = 0;
-            char _str__id = str[index]-'0'; 
-            if(_str__id < 0 || _str__id > 9) return -1;
-            while(_str__id >= 0 && _str__id <= 9)
-            {
-                (*val)  * =10;
-                (*val)  += _str__id;
-                index++;
-                _str__id = str[index] - '0'; 
-            }
-            return index;
+    char strInt[4];
+    (*val)              = 0;
+    int index        = 0;
+    char _str__id = str[index]-'0'; 
+    if(_str__id < 0 || _str__id > 9) return -1;
+    while(_str__id >= 0 && _str__id <= 9)
+    {
+        (*val)  *=10;
+        (*val)  += _str__id;
+        index++;
+        _str__id = str[index] - '0'; 
+    }
+    return index;
 }
 
 int RTTTL::getTone(char *str, int *toneID)
@@ -148,44 +149,68 @@ int RTTTL::getTone(char *str, int *toneID)
     
 }
 
-int parseNote(char* note)
+int RTTTL::parseNote(char* note)
 {
-      // C #C D #D E F #F G #G A #A B
+      // C #C D #D E F #F G #G A #A B 
+      Serial.print(note);
       int base_tones[] = { 523, 554, 587, 622, 660, 698, 740, 784, 831, 880, 932, 988};
-      int index               = 0;
-      int octave            = mdefault_octave;
-      int duration         = m_default_duration;
-      int tone_id           = 0;
       int index              = 0;
-      noTone(pinBuzzer);
+      int octave            = m_default_octave;
+      int duration          = m_default_duration;
+      int tone_id           = 0;
+      noTone(m_buzzer_pin);
       _CHECK_EOS_(note[index]);
+      Serial.print(" - OK");
       int val;
-      int res = getUnsignedInt(note[index], &val);
+      int res = getUnsignedInt(&note[index], &val);
       if(res>=0) {duration = val; index+=res;}
+      Serial.print(" - duration");
       _CHECK_EOS_(note[index]);
-      res = getTone(note[index], &val);
+      res = getTone(&note[index], &val);
       if(res>=0) {tone_id = val; index+=res;}
-      _CHECK_EOS_(note[index]);
-      res = getUnsignedInt(note[index], &val);
-      if(res>=0) {octave = val; index+=res;}
+      Serial.print(" - Tone");
+      if(note[index]!='\0')
+      {
+        res = getUnsignedInt(&note[index], &val);
+        if(res>=0) {octave = val; index+=res;}
+      }
+      Serial.print(" - octave");
       // Play Note
       int finalTone = (base_tones[tone_id]/5)*(octave);
-      tone(m_buzzerPin, finalTone);
+      tone(m_buzzer_pin, finalTone);
       // Set duration 
-      interval = full_time/duration; 
-      previous =  millis(); 
+      m_interval = m_full_time/duration; 
+      m_prev_time =  millis(); 
       return index;
 }
 
 
 void RTTTL::tick()
 {
-  if ((millis()-previous >= interval) ) {
-    previous = millis();
-    int res = parseNote(m_notes[m_notePointer]);
+  if ((millis()-m_prev_time >= m_interval) ) {
+    m_prev_time = millis();
+    char strNote[7];
+    int index=0;
+    while((m_notes[m_notePointer+index]==',' || m_notes[m_notePointer]==' ') && m_notePointer<m_noteLen)
+      m_notePointer++;
+    if(m_notePointer==m_noteLen) return; // Problem !!!  
+    
+    while(m_notes[m_notePointer+index]!=',' && m_notePointer+index<m_noteLen && index<6)
+    {
+      strNote[index]=m_notes[m_notePointer+index];
+      index ++;
+    }
+    strNote[index]='\0';
+    int res = parseNote(strNote);
     if(res>0)
     {
-        m_notePointer += res;
+      m_notePointer += res;
+      Serial.println("Parsed");
     } 
+    if(m_notePointer >= m_noteLen)
+    {
+      Serial.println("Rewind");
+      m_notePointer=0;
+    }
   }
 }

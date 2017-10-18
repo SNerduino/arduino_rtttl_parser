@@ -2,6 +2,12 @@
 // rtttl_lib
 // Author : Saifeddine ALOUI
 // =========================================
+#ifndef RTTTL_H
+#define RTTTL_H
+
+#include "Arduino.h"
+
+
 // =========================================
 // Defines
 // =========================================
@@ -17,13 +23,14 @@ private:
     char *   m_notes=0;
     int         m_melody_len=0;
     int         m_default_duration=0;
-    int         m_default_octave=0;
+    int         m_default_octave=0; 
     int         m_tempo=0;
     int         m_buzzer_pin=0;
     
     int         m_notePointer=0;
+    int         m_noteLen=0;
     
-    unsigned long m_full_time=600;
+    unsigned long m_full_time=2500;
     unsigned long m_prev_time;
     unsigned long m_interval;
 
@@ -37,4 +44,6 @@ public :
     int getUnsignedInt(char *str, int *val);
     int getTone(char *str, int *toneID);
 };
+
+#endif //RTTTL_H
 
