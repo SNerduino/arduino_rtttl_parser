@@ -1,3 +1,5 @@
+#include <TimedAction.h>
+
 /*
   Blink
   Turns on an LED on for one second, then off for one second, repeatedly.
@@ -14,12 +16,12 @@ int ledG = 4;
 int RECV_PIN = 6;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
-
-
-//char melody_tones[] = "tetris:d=4,o=5,b=63:4c,16p,4c#,16p,4d#,16p,4e,16p,4f,16p,4f#,16p,4g,16p,4g#,16p,4a,16p,4a#,16p,4b,16p\0";
-char melody_tones[] = "tetris:d=4,o=5,b=63:8c,32p,8d,32p,8e,32p,8f,32p,8g,32p,8a,32p,8b,32p\0";
-
 const int pinBuzzer = 8;
+
+char melody_tones[] = "tetris:d=4,o=5,b=63:4c,16p,4c#,16p,4d#,16p,4e,16p,4f,16p,4f#,16p,4g,16p,4g#,16p,4a,16p,4a#,16p,4b,16p\0";
+//char melody_tones[] = "tetris:d=4,o=5,b=63:8c,32p,8d,32p,8e,32p,8f,32p,8g,32p,8a,32p,8b,32p\0";
+RTTTL rttl = RTTTL(melody_tones,pinBuzzer);
+
 bool isWaiting=false;
 
 // the setup routine runs once when you press reset:
@@ -54,12 +56,13 @@ void showLed()
   else
     digitalWrite(ledG, LOW);   // turn the LED on (HIGH is the voltage level)
 }
+TimedAction ledShow = TimedAction(1000,showLed);
 
 
 // the loop routine runs over and over again forever:
 void loop() {
   ledShow.check();
-
+  rttl.tick();
   if (irrecv.decode(&results)) {
 //    Serial.println("Got something");
 //    Serial.println(results.value,HEX);
