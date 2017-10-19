@@ -18,9 +18,9 @@ IRrecv irrecv(RECV_PIN);
 decode_results results;
 const int pinBuzzer = 8;
 
-char melody_tones[] = "tetris:d=4,o=5,b=63:4c,16p,4c#,16p,4d#,16p,4e,16p,4f,16p,4f#,16p,4g,16p,4g#,16p,4a,16p,4a#,16p,4b,16p\0";
+char melody_tones[] = "IndianaJones:d=4,o=5,b=250:e,8p,8f,8g,8p,2c.6,8p.,d,8p,8e,1f,p.,g,8p,8a,8b,8p,2f.6,p,a,8p,8b,2c6,2d6,2e6,e,8p,8f,8g,8p,1c6,p,d6,8p,8e6,1f6,g,8p,8g,e.6,8p,d6,8p,8g,e.6,8p,d6,8p,8g,f.6,8p,e6,8p,8d6,1c6\0";
 //char melody_tones[] = "tetris:d=4,o=5,b=63:8c,32p,8d,32p,8e,32p,8f,32p,8g,32p,8a,32p,8b,32p\0";
-RTTTL rttl = RTTTL(melody_tones,pinBuzzer);
+RTTTL rtttl = RTTTL(pinBuzzer);
 
 bool isWaiting=false;
 
@@ -33,7 +33,8 @@ void setup() {
   
   Serial.begin(115200);
   irrecv.enableIRIn(); // Start the receiver
-  Serial.println("RemoteLeds");
+  Serial.println("RemoteLeds :");
+  rtttl.setMelody(melody_tones);
 }
 
 int ledStatus=0;
@@ -62,7 +63,7 @@ TimedAction ledShow = TimedAction(1000,showLed);
 // the loop routine runs over and over again forever:
 void loop() {
   ledShow.check();
-  rttl.tick();
+  rtttl.tick();
   if (irrecv.decode(&results)) {
 //    Serial.println("Got something");
 //    Serial.println(results.value,HEX);

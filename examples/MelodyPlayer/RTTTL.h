@@ -22,9 +22,9 @@ private:
     char *   m_melody=0;
     char *   m_notes=0;
     int         m_melody_len=0;
-    int         m_default_duration=0;
-    int         m_default_octave=0; 
-    int         m_tempo=0;
+    int         m_default_duration=4;
+    int         m_default_octave=5; 
+    int         m_tempo=100;
     int         m_buzzer_pin=0;
     
     int         m_notePointer=0;
@@ -38,8 +38,10 @@ private:
 public :
     char *   melody_title;
 
-    RTTTL(char * melody, int buzzerPin);
-    int parseNote(char* note);
+    RTTTL(int buzzerPin);
+    
+    int setMelody(char *melody);
+    int parseNote(char *note);
     void tick();
     int getUnsignedInt(char *str, int *val);
     int getTone(char *str, int *toneID);
