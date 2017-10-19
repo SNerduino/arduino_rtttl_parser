@@ -143,22 +143,22 @@ int RTTTL::getTone(char *str, int *toneID)
     switch(str[0])
     {
         case 'c':
-            if(isSharp==0)(*toneID)=0; else (*toneID)=1;
+            if(isSharp!=1)(*toneID)=0; else (*toneID)=1;
             break;
         case 'd':
-            if(isSharp==0)(*toneID)=2; else (*toneID)=3;
+            if(isSharp!=1)(*toneID)=2; else (*toneID)=3;
             break;
         case 'e':
-            (*toneID)=4; ;
+            (*toneID)=4; 
             break;
         case 'f':
-            if(isSharp==0)(*toneID)=5; else (*toneID)=6;
+            if(isSharp!=1)(*toneID)=5; else (*toneID)=6;
             break;
         case 'g':
-            if(isSharp==0)(*toneID)=7; else (*toneID)=8;
+            if(isSharp!=1)(*toneID)=7; else (*toneID)=8;
             break;
         case 'a':
-            if(isSharp==0)(*toneID)=9; else (*toneID)=10;
+            if(isSharp!=1)(*toneID)=9; else (*toneID)=10;
             break;
         case 'b':
             (*toneID)=11;
@@ -185,9 +185,11 @@ int RTTTL::parseNote(char* note)
       int tone_id           = 0;
       noTone(m_buzzer_pin);
       _CHECK_EOS_(note[index]);
+      // GET DURATION
       int val;
       int res = getUnsignedInt(&note[index], &val);
       if(res>=0) {duration = val; index+=res;}
+      
       _CHECK_EOS_(note[index]);
       res = getTone(&note[index], &val);
       if(res>=0) {tone_id = val; index+=res;}
@@ -205,6 +207,10 @@ int RTTTL::parseNote(char* note)
       // Set duration 
       m_interval = m_full_time/duration; 
       m_prev_time =  millis(); 
+      printint("t=",tone_id);
+      printint(", o=",octave);
+      printint(", d=",duration);
+      Serial.println("");
       return index;
 }
 
