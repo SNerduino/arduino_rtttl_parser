@@ -191,8 +191,11 @@ int RTTTL::parseNote(char* note)
 #ifdef RTTTL_DEBUG
       Serial.println(note);
 #endif
-      int base_tones[] = { 261, 277, 293, 311, 329.63, 349, 370, 392, 415, 440, 466, 493};
-      int index             = 0;
+// A4
+//      int base_tones[] = { 261, 277, 293, 311, 329, 349, 370, 392, 415, 440, 466, 493};
+// A1
+      int base_tones[] = {33, 35,37, 39, 41, 44, 46, 49, 52, 55, 58, 62};
+      int index                       = 0;
       m_currentNote.octave            = m_default_octave;
       m_currentNote.duration          = m_default_duration;
       m_currentNote.is_dotted         = false;
@@ -219,7 +222,7 @@ int RTTTL::parseNote(char* note)
       // Play Note
       if(m_currentNote.note!=12)
       {
-        int finalTone = (base_tones[m_currentNote.note])*(m_currentNote.octave/4);
+        float finalTone = (440.0 / 32.0) * (pow(2.0,  (((m_currentNote.note+(m_currentNote.octave)*11.0) - 9.0) / 12.0))); //(base_tones[m_currentNote.note])*(m_currentNote.octave+1);
         tone(m_buzzer_pin, finalTone);
       }
       // Set duration 
@@ -232,22 +235,22 @@ int RTTTL::parseNote(char* note)
 #ifdef RTTTL_DEBUG
       printint("t=",m_currentNote.note);
       printint(", o=",m_currentNote.octave);
-      printint(", d=",duration);
+      printint(", d=",m_currentNote.duration);
       Serial.println("");
 #endif
       return index;
 }
 
 
-RTTTL_NoteInfos  *RTTTL::tick()
+void RTTTL::tick()
 {
   if ((millis()-m_prev_time >= m_interval) ) {
     noTone(m_buzzer_pin);
     // Detect pause
     if(m_pause) 
     {
-      m_currentNote.info = RTTTL_INFO_NONE;
-      return &m_currentNote;
+      m_currentNote.info = RTTTL_INFO_PAUSED;
+      return;
     }
     if(m_notePointer < m_noteLen)
     {
@@ -256,8 +259,12 @@ RTTTL_NoteInfos  *RTTTL::tick()
       int index=0;
       while((m_notes[m_notePointer]==',' || m_notes[m_notePointer]==' ') && m_notePointer<m_noteLen)
         m_notePointer++;
-      if(m_notePointer==m_noteLen) return NULL; // Problem !!!  
-      
+      if(m_notePointer==m_noteLen) 
+      {
+        
+        m_currentNote.info = RTTTL_INFO_INCOMPLETE_SEQ;
+        return; // Problem !!!  
+      }    
       while(m_notes[m_notePointer+index]!=',' && m_notePointer+index<m_noteLen && index<6)
       {
         strNote[index]=m_notes[m_notePointer+index];
@@ -278,20 +285,14 @@ RTTTL_NoteInfos  *RTTTL::tick()
            m_notePointer=0;
       }
       m_currentNote.info = RTTTL_INFO_NONE;
-      return &m_currentNote;
+      return;
     }
     m_currentNote.info = RTTTL_INFO_EOM;
-    return &m_currentNote;
   }
 }
 
 void RTTTL::pauseMelody()
 {
-  m_pause=true;
-}
-
-void RTTTL::continueMelody()
-{
-  m_pause = false;
+  m_pause=!m_pause;
 }
 

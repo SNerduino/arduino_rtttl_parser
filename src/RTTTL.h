@@ -10,16 +10,18 @@
 // =========================================
 // Configurations
 // =========================================
-//#define RTTTL_DEBUG
+#define RTTTL_DEBUG
 // =========================================
 // Defines
 // =========================================
 #define RTTTL_ERR_INCOMPLETE_NOTE (-1)
 
-#define RTTTL_INFO_NONE (0)
-#define RTTTL_INFO_PARSING_ERR (1)
-#define RTTTL_INFO_PAUSE (2)
-#define RTTTL_INFO_EOM (3)
+// Note information list
+#define RTTTL_INFO_NONE            (0)
+#define RTTTL_INFO_PARSING_ERR     (1)
+#define RTTTL_INFO_PAUSED          (2)
+#define RTTTL_INFO_EOM             (3)
+#define RTTTL_INFO_INCOMPLETE_SEQ  (4)
 
 class RTTTL_NoteInfos{
 public :
@@ -44,7 +46,7 @@ private:
     int      m_loop=false;
     char *   m_melody=0;
     char *   m_notes=0;
-    char     m_title[20];
+    char     m_title[26];
 
     int         m_melody_len=0;
     int         m_default_duration=4;
@@ -68,10 +70,9 @@ public :
 
     RTTTL(int buzzerPin);
     void pauseMelody();
-    void continueMelody();
     int playMelody(char *melody, int _loop=false);
     int parseNote(char *note);
-    RTTTL_NoteInfos   *tick();
+    void tick();
     int getUnsignedInt(char *str, int *val);
     int getTone(char *str, int *toneID);
 };
