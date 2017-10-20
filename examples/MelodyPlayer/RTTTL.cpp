@@ -105,7 +105,7 @@ int RTTTL::setMelody(char *melody)
      printint("m_noteLen = ",m_noteLen);
     Serial.println("");
   }  
-    m_full_time = 60000/m_tempo;
+    m_full_time = 120000/m_tempo;
   printint("Infos : b=",m_tempo);
   printint(", o=",m_default_octave);
   printint(", d=",m_default_duration);
@@ -177,7 +177,7 @@ int RTTTL::getTone(char *str, int *toneID)
 int RTTTL::parseNote(char* note)
 {
       // C #C D #D E F #F G #G A #A B 
-      //Serial.print(note);
+      Serial.println(note);
       int base_tones[] = { 523, 554, 587, 622, 660, 698, 740, 784, 831, 880, 932, 988};
       int index             = 0;
       int octave            = m_default_octave;
@@ -218,28 +218,32 @@ int RTTTL::parseNote(char* note)
 void RTTTL::tick()
 {
   if ((millis()-m_prev_time >= m_interval) ) {
-    m_prev_time = millis();
-    char strNote[7];
-    int index=0;
-    while((m_notes[m_notePointer]==',' || m_notes[m_notePointer]==' ') && m_notePointer<m_noteLen)
-      m_notePointer++;
-    if(m_notePointer==m_noteLen) return; // Problem !!!  
-    
-    while(m_notes[m_notePointer+index]!=',' && m_notePointer+index<m_noteLen && index<6)
+    noTone(m_buzzer_pin);
+    if(m_notePointer < m_noteLen)
     {
-      strNote[index]=m_notes[m_notePointer+index];
-      index ++;
-    }
-    strNote[index]='\0';
-    int res = parseNote(strNote);
-    if(res>0)
-    {
-      m_notePointer += res;
-    } 
-    if(m_notePointer >= m_noteLen)
-    {
-      Serial.println("Rewind");
-      m_notePointer=0;
+      m_prev_time = millis();
+      char strNote[7];
+      int index=0;
+      while((m_notes[m_notePointer]==',' || m_notes[m_notePointer]==' ') && m_notePointer<m_noteLen)
+        m_notePointer++;
+      if(m_notePointer==m_noteLen) return; // Problem !!!  
+      
+      while(m_notes[m_notePointer+index]!=',' && m_notePointer+index<m_noteLen && index<6)
+      {
+        strNote[index]=m_notes[m_notePointer+index];
+        index ++;
+      }
+      strNote[index]='\0';
+      int res = parseNote(strNote);
+      if(res>0)
+      {
+        m_notePointer += index+1;
+      } 
+      if(m_notePointer >= m_noteLen)
+      {
+        Serial.println("Rewind");
+   //     m_notePointer=0;
+      }
     }
   }
 }
