@@ -1,6 +1,8 @@
 # include "RTTTL.h"
 
-#define _CHECK_EOS_(strNote) if(strNote=='\0') {Serial.println(":p"); return RTTTL_ERR_INCOMPLETE_NOTE;}
+#define _CHECK_EOS_(strNote) if(strNote=='\0') {\
+                                return RTTTL_ERR_INCOMPLETE_NOTE;\
+                              }
 
 RTTTL::RTTTL(int buzzerPin)
 {
@@ -15,26 +17,33 @@ void printint(char * title, int i)
   itoa(i,str,10);
   Serial.print(str);
 }
-int RTTTL::setMelody(char *melody)
+
+
+int RTTTL::playMelody(char *melody, int _loop)
 {
   int index=0;
   int totalstrLen;
   
+  m_loop        = _loop; 
   m_melody      = melody;
   melody_title  = melody;
   totalstrLen= strlen(m_melody);
+#ifdef RTTTL_DEBUG
   Serial.println(m_melody);
   printint("totalstrLen = ", totalstrLen);
   Serial.println("");
+#endif
   // Find melody Name
   while(m_melody[index]!=':' && index<totalstrLen)
   {
     index++;
   }
   if(index==totalstrLen)return -1;
-  m_melody[index]='\0';
-  
-  char *melodyParams = &m_melody[index+1];
+  memcpy(m_title,m_melody,index);
+  m_title[index]='\0';
+  Serial.println(m_title);
+  index++;
+  char *melodyParams = &m_melody[index];
   // Extract parameters
   while(m_melody[index]!=':' && index<totalstrLen)
   {
@@ -94,7 +103,7 @@ int RTTTL::setMelody(char *melody)
         }
     }
     
-    index++;    
+    index++;
   }  
 
   
@@ -102,15 +111,18 @@ int RTTTL::setMelody(char *melody)
   {
      m_notes=&m_melody[index+1];
      m_noteLen=strlen(m_notes);
+#ifdef RTTTL_DEBUG
      printint("m_noteLen = ",m_noteLen);
     Serial.println("");
+#endif
   }  
-    m_full_time = 60000/m_tempo;
+  m_full_time = 3*(60000/m_tempo);
+#ifdef RTTTL_DEBUG
   printint("Infos : b=",m_tempo);
   printint(", o=",m_default_octave);
   printint(", d=",m_default_duration);
   Serial.println("");
-  
+#endif
   m_notePointer = 0;
   m_prev_time=millis();
   return 0;
@@ -139,7 +151,6 @@ int RTTTL::getTone(char *str, int *toneID)
     int isSharp=0;
     (*toneID) =-1;
     if(str[1]=='#') isSharp =1;
-    if(str[1]=='.') isSharp =2;
     switch(str[0])
     {
         case 'c':
@@ -168,7 +179,7 @@ int RTTTL::getTone(char *str, int *toneID)
             break;
     }
     if((*toneID)>=0)
-        if(isSharp>1) return 2;
+        if(isSharp>=1) return 2;
         else return 1;
    else return -1;
     
@@ -177,69 +188,110 @@ int RTTTL::getTone(char *str, int *toneID)
 int RTTTL::parseNote(char* note)
 {
       // C #C D #D E F #F G #G A #A B 
-      //Serial.print(note);
-      int base_tones[] = { 523, 554, 587, 622, 660, 698, 740, 784, 831, 880, 932, 988};
+#ifdef RTTTL_DEBUG
+      Serial.println(note);
+#endif
+      int base_tones[] = { 261, 277, 293, 311, 329.63, 349, 370, 392, 415, 440, 466, 493};
       int index             = 0;
-      int octave            = m_default_octave;
-      int duration          = m_default_duration;
-      int tone_id           = 0;
+      m_currentNote.octave            = m_default_octave;
+      m_currentNote.duration          = m_default_duration;
+      m_currentNote.is_dotted         = false;
       noTone(m_buzzer_pin);
       _CHECK_EOS_(note[index]);
       // GET DURATION
       int val;
       int res = getUnsignedInt(&note[index], &val);
-      if(res>=0) {duration = val; index+=res;}
+      if(res>=0) {m_currentNote.duration = val; index+=res;}
       
       _CHECK_EOS_(note[index]);
       res = getTone(&note[index], &val);
-      if(res>=0) {tone_id = val; index+=res;}
+      if(res>=0) {m_currentNote.note = val; index+=res;
+#ifdef RTTTL_DEBUG
+      printint("get tone offset :",res); Serial.println("");
+#endif   
+      }
+      if(note[index]=='.'){m_currentNote.is_dotted=true;index++;}
       if(note[index]!='\0')
       {
         res = getUnsignedInt(&note[index], &val);
-        if(res>=0) {octave = val; index+=res;}
+        if(res>=0) {m_currentNote.octave = val; index+=res;}
       }
       // Play Note
-      if(tone_id!=12)
+      if(m_currentNote.note!=12)
       {
-        int finalTone = (base_tones[tone_id]/5)*(octave);
+        int finalTone = (base_tones[m_currentNote.note])*(m_currentNote.octave/4);
         tone(m_buzzer_pin, finalTone);
       }
       // Set duration 
-      m_interval = m_full_time/duration; 
+      m_interval = (m_full_time/m_currentNote.duration)  ; 
+      if(m_currentNote.is_dotted)
+      {
+        m_interval = m_interval/2+m_interval ; 
+      }
       m_prev_time =  millis(); 
-      printint("t=",tone_id);
-      printint(", o=",octave);
+#ifdef RTTTL_DEBUG
+      printint("t=",m_currentNote.note);
+      printint(", o=",m_currentNote.octave);
       printint(", d=",duration);
       Serial.println("");
+#endif
       return index;
 }
 
 
-void RTTTL::tick()
+RTTTL_NoteInfos  *RTTTL::tick()
 {
   if ((millis()-m_prev_time >= m_interval) ) {
-    m_prev_time = millis();
-    char strNote[7];
-    int index=0;
-    while((m_notes[m_notePointer]==',' || m_notes[m_notePointer]==' ') && m_notePointer<m_noteLen)
-      m_notePointer++;
-    if(m_notePointer==m_noteLen) return; // Problem !!!  
-    
-    while(m_notes[m_notePointer+index]!=',' && m_notePointer+index<m_noteLen && index<6)
+    noTone(m_buzzer_pin);
+    // Detect pause
+    if(m_pause) 
     {
-      strNote[index]=m_notes[m_notePointer+index];
-      index ++;
+      m_currentNote.info = RTTTL_INFO_NONE;
+      return &m_currentNote;
     }
-    strNote[index]='\0';
-    int res = parseNote(strNote);
-    if(res>0)
+    if(m_notePointer < m_noteLen)
     {
-      m_notePointer += res;
-    } 
-    if(m_notePointer >= m_noteLen)
-    {
-      Serial.println("Rewind");
-      m_notePointer=0;
+      m_prev_time = millis();
+      char strNote[7];
+      int index=0;
+      while((m_notes[m_notePointer]==',' || m_notes[m_notePointer]==' ') && m_notePointer<m_noteLen)
+        m_notePointer++;
+      if(m_notePointer==m_noteLen) return NULL; // Problem !!!  
+      
+      while(m_notes[m_notePointer+index]!=',' && m_notePointer+index<m_noteLen && index<6)
+      {
+        strNote[index]=m_notes[m_notePointer+index];
+        index ++;
+      }
+      strNote[index]='\0';
+      int res = parseNote(strNote);
+      if(res>0)
+      {
+        m_notePointer += index+1;
+      } 
+      if(m_notePointer >= m_noteLen)
+      {
+#ifdef RTTTL_DEBUG
+        Serial.println("Finished");
+#endif
+        if(m_loop)
+           m_notePointer=0;
+      }
+      m_currentNote.info = RTTTL_INFO_NONE;
+      return &m_currentNote;
     }
+    m_currentNote.info = RTTTL_INFO_EOM;
+    return &m_currentNote;
   }
 }
+
+void RTTTL::pauseMelody()
+{
+  m_pause=true;
+}
+
+void RTTTL::continueMelody()
+{
+  m_pause = false;
+}
+
