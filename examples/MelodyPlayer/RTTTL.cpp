@@ -168,7 +168,7 @@ int RTTTL::getTone(char *str, int *toneID)
             break;
     }
     if((*toneID)>=0)
-        if(isSharp>1) return 2;
+        if(isSharp>=1) return 2;
         else return 1;
    else return -1;
     
@@ -192,7 +192,7 @@ int RTTTL::parseNote(char* note)
       
       _CHECK_EOS_(note[index]);
       res = getTone(&note[index], &val);
-      if(res>=0) {tone_id = val; index+=res;}
+      if(res>=0) {tone_id = val; index+=res;printint("get tone offset :",res); Serial.println("");}
       if(note[index]!='\0')
       {
         res = getUnsignedInt(&note[index], &val);
@@ -205,7 +205,7 @@ int RTTTL::parseNote(char* note)
         tone(m_buzzer_pin, finalTone);
       }
       // Set duration 
-      m_interval = m_full_time/duration; 
+      m_interval = m_full_time/32*duration; 
       m_prev_time =  millis(); 
       printint("t=",tone_id);
       printint(", o=",octave);
