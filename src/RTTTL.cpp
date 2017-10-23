@@ -116,7 +116,7 @@ int RTTTL::playMelody(char *melody, int _loop)
     Serial.println("");
 #endif
   }  
-  m_full_time = 3*(60000/m_tempo);
+  m_full_time = (60*1000L/m_tempo)*4;
 #ifdef RTTTL_DEBUG
   printint("Infos : b=",m_tempo);
   printint(", o=",m_default_octave);
@@ -226,7 +226,7 @@ int RTTTL::parseNote(char* note)
         tone(m_buzzer_pin, finalTone);
       }
       // Set duration 
-      m_interval = (m_full_time/m_currentNote.duration)  ; 
+      m_interval = (m_full_time/m_currentNote.duration) *4 ; 
       if(m_currentNote.is_dotted)
       {
         m_interval = m_interval/2+m_interval ; 
