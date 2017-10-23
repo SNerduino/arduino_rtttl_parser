@@ -7,7 +7,7 @@
  pin 10 is connected to LOAD 
  We have only a single MAX72XX.
  */
-LedControl lc=LedControl(12,11,10,2); //
+LedControl lc=LedControl(12,11,10,1); //
 /*
   Sketch : MelodyPlayerV2
   Author : Saifeddine ALOUI
@@ -15,11 +15,11 @@ LedControl lc=LedControl(12,11,10,2); //
   The player setup needs a ELEGOO remote control, MAX2719 based 8X8 Leds pannel + a buzzer + 300Ohms resistor + infrared receiver
   
   The player is remote controlled using the infrared remote control.
-  The parsed notes are used to play the leds.
+  The parsed notes are used to update the leds matrix.
 
   Depends on :
     wayoda's LedControl library https://github.com/wayoda/LedControl
-    
+    The Led Matrix as well as the buzzer use  
 
   3 activities are running in the same time : 
     - our RTTTL library
@@ -51,11 +51,6 @@ LedControl lc=LedControl(12,11,10,2); //
 #include <IRremote.h>
 #include <RTTTL.h>
 // ===========================================
-// Leds to play
-int ledR = 2;
-int ledY = 3;
-int ledG = 4;
-int ledB = 5;
 // IR input pin
 int RECV_PIN = 6;
 IRrecv irrecv(RECV_PIN);
@@ -67,14 +62,14 @@ const int pinBuzzer = 8;
 // Melodies
 // ===================================================================================
 // Select the melody you want or just place your own melody in a character array
-//char final_count_down[] = "FinalCountdown:d=4,o=5,b=125:16c#6,16b,c#6,f#,p.,16d6,16c#6,8d6,8c#6,b,p.,16d6,16c#6,d6,f#,p.,16b,16a,8b,8a,8g#,8b,a.,16c#6,16b,c#6,f#,p.,16d6,16c#6,8d6,8c#6,b,p.,16d6,16c#6,d6,f#,p.,16b,16a,8b,8a,8g#,8b,a.,16g#,16a,b.,16a,16b,8c#6,8b,8a,8g#,f#,d6,2c#.6,16c#6,16d6,16c#6,16b,1c#6,2p";
-//char takeOnMe[] = "TakeOnMe:d=4,o=4,b=160:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5,8f#5,8e5,8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5";
+char final_count_down[] = "FinalCountdown:d=4,o=5,b=125:16c#6,16b,c#6,f#,p.,16d6,16c#6,8d6,8c#6,b,p.,16d6,16c#6,d6,f#,p.,16b,16a,8b,8a,8g#,8b,a.,16c#6,16b,c#6,f#,p.,16d6,16c#6,8d6,8c#6,b,p.,16d6,16c#6,d6,f#,p.,16b,16a,8b,8a,8g#,8b,a.,16g#,16a,b.,16a,16b,8c#6,8b,8a,8g#,f#,d6,2c#.6,16c#6,16d6,16c#6,16b,1c#6,2p";
+char takeOnMe[] = "TakeOnMe:d=4,o=4,b=160:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5,8f#5,8e5,8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5";
 //char weRock[] = "we-rock:d=4,o=6,b=80:16a5,16a5,16c6,16e.6,8d.6,4a5,16a5,16a5,16g5,16c.6,4a.5,16a5,16a5,16c6,16e.6,8d.6,4a6,16g6,16g6,16e6,16c.6,2a6,16c7,16a#6,16a6,16g6,16f6,16e6,16d6,16e6,16c6,4d6,16d6,16c7,16a#6,16g#6,16g6,16e6,16d6,16c6,16d6,16e.6,16d6,16c.6,8d6,4a6,16g6,16g6,16e6,16c.6,2d6,32f.5,8f#5,32f.5,32f#.5,16g#5,16f#5,4f.5,32f.5,16f#.5,32f.5,32f#.5,16f5,16d#5,4a#.5,32f.5,8f#5,32f.5,32f#.5,16g#5,16f#5,4f.5,32a5,16a#.5,32a.5,32a#.5,16c#6,16a#5,16g#.5,16f.5,4d5,8a#6,16g#6,16f#6,16f6,16d#6,16f6,16a#5,4d#6,8d#6,16c#6,16b6,16a6,16g#6,16f#6,16d#6,16f.6,16d#6,16c#.6,8d#6,4a#6,16g#6,16g#6,16f6,16c#.6,4d#.6,16g#6,16g#6,16f6,16g#6,16c#6,4d#.6,32f.5,8f#.5,32a#.5,2b5,16c#.5,16c#.5,16g#.5,16d#.5,16a#.5";
 char indi[] = "IndianaJones:d=4,o=5,b=250:e,8p,8f,8g,8p,2c.6,8p.,d,8p,8e,1f,p.,g,8p,8a,8b,8p,2f.6,p,a,8p,8b,2c6,2d6,2e6,e,8p,8f,8g,8p,1c6,p,d6,8p,8e6,1f6,g,8p,8g,e.6,8p,d6,8p,8g,e.6,8p,d6,8p,8g,f.6,8p,e6,8p,8d6,1c6";
 //char cal2pac[] = "2Pac - California Love : d=4,o=5,b=90:8g.6,16f6,8c#6,8d6,8f6,d.6,2p,8g,8a#,8d6,8d6,p,8p,8g,8g,16g,8f.,8g,2p,8g,16a#,16g,8d6,2d6,16g,8g.,g,2p,8g,8a#,8d6,2d.6,16g,16g,8g,8f,8g,p,8g,8c6,8c6,8a#,8a,g,p,8g,c6,8a#,8a,2g,";
 //char tetris[] = "Tetris:d=4,o=6,b=80:8f7,16c7,16c_7,16d_7,32f7,32d_7,16c_7,16c7,8a_,16a_,16c_7,8f7,16d_7,16c_7,8c.7,16c_7,8d_7,8f7,8c_7,8a_,a_,8d_7,16f_7,8a_7,16g_7,16f_7,8f.7,16c_7,8f7,16d_7,16c_7,8c7,16c7,16c_7,8d_7,8f7,8c_7,8a_,8a_";
 //char melody_tones[] = "tetris:d=4,o=5,b=63:8c,32p,8d,32p,8e,32p,8f,32p,8g,32p,8a,32p,8b,32p\0";
-char dre[] = "TheNextE:d=4,o=5,b=90:8e,8p,8b,8p,16b,16p,16a,16p,8b,8p,16a,16p,16g,16p,8a,8p,16a,16p,16g,16p,16e,16p,16g,16p,8e,8p,8b,8p,16b,16p,16a,16p,8b,8p,16a,16p,16g,16p,8a,8p,16a,16p,16g,16p,16e,16p,16g";
+//char dre[] = "TheNextE:d=4,o=5,b=90:8e,8p,8b,8p,16b,16p,16a,16p,8b,8p,16a,16p,16g,16p,8a,8p,16a,16p,16g,16p,16e,16p,16g,16p,8e,8p,8b,8p,16b,16p,16a,16p,8b,8p,16a,16p,16g,16p,8a,8p,16a,16p,16g,16p,16e,16p,16g";
 //char doom[] = "Doom:d=32,o=5,b=56:f,f,f6,f,f,d#6,f,f,c#6,f,f,b,f,f,c6,c#6,f,f,f6,f,f,d#6,f,f,c#6,f,f,8b.,f,f,f6,f,f,d#6,f,f,c#6,f,f,b,f,f,c6,c#6,f,f,f6,f,f,d#6,f,f,c#6,f,f,8b.,a#,a#,a#6,a#,a#,g#6,a#,a#,f#6,a#,a#,e6,a#,a#,f6,f#6,a#,a#,a#6,a#,a#,g#6,a#,a#,f#6,a#,a#,8e6";
 //char drwho[] = "Dr Who:d=4,o=6,b=80:b.5,8g5,16b.5,8a.5,32g.5,32f#5,g.5,e,32d,32c,8d,8g5,8e.,32d,32c,8d,8b5,2a5,32g5,32f#5,2g5";
 //char startreck[] = "we-rock:d=4,o=6,b=225:2b.4,4e.5,1a5,4g#.5,4e.5,4c#.5,4f#.5,2b.5,4b.5,2d#.6,";
@@ -99,7 +94,7 @@ void setup() {
    */
   lc.shutdown(0,false);
   /* Set the brightness to a medium values */
-  lc.setIntensity(0,8);
+  lc.setIntensity(0,2);
   /* and clear the display */
   lc.clearDisplay(0);
   Serial.begin(115200);
@@ -114,14 +109,14 @@ void setup() {
 // ===================================================
 char displayData[8];
 char smiley[8]=
-{B00011000,
- B01100110,
- B10000001,
- B10100101,
- B10100101,
- B10011001,
- B01100110,
- B00011000,
+{B00111100,
+ B01000010,
+ B10010101,
+ B10100001,
+ B10100001,
+ B10010101,
+ B01000010,
+ B00111100,
 };
 void updateDisplay()
 {
@@ -133,11 +128,12 @@ void updateDisplay()
 // the loop routine runs over and over again forever:
 // ===================================================
 void loop() {
+  // Call the rtttl parser to update playing status
   rtttl.tick();
+  // Recover last parsing note information
   RTTTL_NoteInfos* note = &rtttl.m_currentNote;
- // printint("address ",(int)&note);
- // Serial.println("");
 
+  // Detect end of melody (can be used for looping)
   if(note->info==RTTTL_INFO_EOM)
   {
     for(int i=0;i<8;i++)
@@ -147,37 +143,38 @@ void loop() {
   {
     for(int i=0;i<8;i++)
       displayData[i]=0x00;
+    // Premare display data    
+    if(note->note<2)
+    {
+        displayData[0]=0xff;
+    }
+    else if (note->note<4)
+    {
+        displayData[1]=0xff;
+    }
+    else if (note->note<6)
+    {
+        displayData[2]=0xff;
+    }
+    else if (note->note<8)
+    {
+        displayData[3]=0xff;
+    }
+    else if (note->note<10)
+    {
+        displayData[4]=0xff;
+    }
+    else if (note->note<12)
+    {
+        displayData[5]=0xff;
+    }
   }
       
-  if(note->note<2)
-  {
-      displayData[0]=0xff;
-  }
-  else if (note->note<4)
-  {
-      displayData[1]=0xff;
-  }
-  else if (note->note<6)
-  {
-      displayData[2]=0xff;
-  }
-  else if (note->note<8)
-  {
-      displayData[3]=0xff;
-  }
-  else if (note->note<10)
-  {
-      displayData[4]=0xff;
-  }
-  else if (note->note<12)
-  {
-      displayData[5]=0xff;
-  }
 
   updateDisplay();
-  
+
+  // Check for remote control input  
   if (irrecv.decode(&results)) {
-//    Serial.println("Got something");
     Serial.println(results.value,HEX);
     switch(results.value)
     {
@@ -185,16 +182,16 @@ void loop() {
         rtttl.pauseMelody();
         break;
       case 0xFF6897: //0
-//        rtttl.playMelody(final_count_down);
+        rtttl.playMelody(final_count_down);
 //        rtttl.playMelody(pacman);
         break;
       case 0xFF30CF: //1
-//        rtttl.playMelody(takeOnMe);
+        rtttl.playMelody(takeOnMe);
         //rtttl.playMelody(cal2pac);
         
         break;
       case 0xFF18E7: //2
-        rtttl.playMelody(dre);
+        //rtttl.playMelody(dre);
         break;
       case 0xFF7A85: //3
         rtttl.playMelody(indi);
