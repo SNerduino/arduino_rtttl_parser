@@ -226,7 +226,7 @@ int RTTTL::parseNote(char* note)
         tone(m_buzzer_pin, finalTone);
       }
       // Set duration 
-      m_interval = (m_full_time/m_currentNote.duration) *4 ; 
+      m_interval = (m_full_time/m_currentNote.duration)  ; 
       if(m_currentNote.is_dotted)
       {
         m_interval = m_interval/2+m_interval ; 
