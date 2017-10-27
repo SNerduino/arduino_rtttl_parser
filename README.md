@@ -4,6 +4,8 @@ Useful for game making, robotics with melody background ...
 
 ## Usage
 Install this library to your sketchbook/libraries directory.
+First make sure that you have installed [LedControl library](https://github.com/wayoda/LedControl) before installing this one (it is needed for some examples).
+
 ### Linux :
 ```
 sudo apt-get install arduino
