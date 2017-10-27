@@ -4,14 +4,14 @@ Useful for game making, robotics with melody background ...
 
 ## Usage
 Install this library to your sketchbook/libraries directory.
-Linux :
+### Linux :
 ```
 sudo apt-get install arduino
 sudo apt-get install python-pip
 sudo pip install confduino
 sudo python -m confduino.libinstall https://github.com/netmonster/arduino_rtttl_parser/archive/master.zip
 ```
-windows
+###windows
 ```
 Download this repository as a zip file
 Open arduino application.
