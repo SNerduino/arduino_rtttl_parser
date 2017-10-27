@@ -11,7 +11,7 @@ sudo apt-get install python-pip
 sudo pip install confduino
 sudo python -m confduino.libinstall https://github.com/netmonster/arduino_rtttl_parser/archive/master.zip
 ```
-###windows
+### Windows
 ```
 Download this repository as a zip file
 Open arduino application.
