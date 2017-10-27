@@ -1,6 +1,10 @@
 // =========================================
-// rtttl_lib
-// Author : Saifeddine ALOUI
+// Library : RTTTL
+// File    : RTTTL.h
+// Author  : Saifeddine ALOUI
+// Description :
+// A library for non blocking RTTTL melody
+// parsing and playing for Arduino applications 
 // =========================================
 #ifndef RTTTL_H
 #define RTTTL_H
@@ -22,24 +26,33 @@
 #define RTTTL_INFO_PAUSED          (2)
 #define RTTTL_INFO_EOM             (3)
 #define RTTTL_INFO_INCOMPLETE_SEQ  (4)
-
+/*
+ * @breaf Note parsing information
+ */
 class RTTTL_NoteInfos{
 public :
-  int duration;
-  int note;
-  int octave;
-  int is_dotted;
-  int info;
+  int duration; 	// The duration of the note
+  int note;       	// The note (0 to 11 for regular notes C C# D D# E F F# G G# A A# B) and 12 for P (silence)
+  int octave;    	// The note octave 4 to 7
+  int is_dotted;	// Tells weather a half time should be added to the duration
+  int info;         // Information about the current status of the parsing
 };
 
 // =========================================
 // Function prototypes
 // =========================================
+#ifdef RTTTL_DEBUG
+/*
+ * @brief prints an integer value to the Serial connection
+ */
 void printint(char * title, int i);
-
+#endif
 // =========================================
 // Main class definition
 // =========================================
+/*
+ * @brief The main RTTTL class
+ */
 class RTTTL
 {
 private:
@@ -64,17 +77,28 @@ private:
     int        m_pause=false;
 
    
-public :
-   RTTTL_NoteInfos  m_currentNote;   
-    char *   melody_title;
-
-    RTTTL(int buzzerPin);
-    void pauseMelody();
-    int playMelody(char *melody, int _loop=false);
-    int parseNote(char *note);
-    void tick();
     int getUnsignedInt(char *str, int *val);
     int getTone(char *str, int *toneID);
+    int parseNote(char *note);
+	
+public :
+	RTTTL_NoteInfos  m_currentNote;   
+    char *   melody_title;
+
+    /*
+	 * @brief The constructor of the class
+	 * @param buzzerPin the pin id that was used for the buzzer
+	 */
+    RTTTL(int buzzerPin);
+    int playMelody(char *melody, int _loop=false);
+    /*
+	 * @brief Toggles pause the currently played melody (pause or resume) 
+	 */
+    void pauseMelody();
+    /*
+	 * @brief Runs the RTTTL parser iteration (check if next note should be parsed. If yes, parse the note and set time for next note parsing. If nothing to be done, just return). This is a non blocking function
+	 */
+    void tick();
 };
 
 #endif //RTTTL_H

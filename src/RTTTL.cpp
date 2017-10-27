@@ -1,3 +1,12 @@
+// =========================================
+// Library : RTTTL
+// File    : RTTTL.h
+// Author  : Saifeddine ALOUI
+// Description :
+// A library for non blocking RTTTL melody
+// parsing and playing for Arduino applications
+// Note : Methods description Can be found in header file 
+// =========================================
 # include "RTTTL.h"
 
 #define _CHECK_EOS_(strNote) if(strNote=='\0') {\
@@ -191,9 +200,6 @@ int RTTTL::parseNote(char* note)
 #ifdef RTTTL_DEBUG
       Serial.println(note);
 #endif
-// A4
-//      int base_tones[] = { 261, 277, 293, 311, 329, 349, 370, 392, 415, 440, 466, 493};
-// A1
       int base_tones[] = {33, 35,37, 39, 41, 44, 46, 49, 52, 55, 58, 62};
       int index                       = 0;
       m_currentNote.octave            = m_default_octave;
