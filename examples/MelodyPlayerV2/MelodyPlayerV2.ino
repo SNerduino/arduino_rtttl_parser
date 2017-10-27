@@ -118,6 +118,9 @@ char smiley[8]=
  B01000010,
  B00111100,
 };
+
+char noSmile= B10100101;
+
 void updateDisplay()
 {
   for(int i=0;i<8;i++)
@@ -127,6 +130,8 @@ void updateDisplay()
 // ===================================================
 // the loop routine runs over and over again forever:
 // ===================================================
+long lastSmile = 0;
+bool smileyStatus=false;
 void loop() {
   // Call the rtttl parser to update playing status
   rtttl.tick();
@@ -136,8 +141,23 @@ void loop() {
   // Detect end of melody (can be used for looping)
   if(note->info==RTTTL_INFO_EOM)
   {
+    long time_ = millis();
+    if(time_-lastSmile>1000)
+    {
+      smileyStatus = !smileyStatus;
+      lastSmile=time_;
+    }
     for(int i=0;i<8;i++)
-       displayData[i]=smiley[i];
+    {
+       if(smileyStatus && (i==2 || i==5))
+       {
+               displayData[i]=noSmile;
+       }
+       else
+       {
+               displayData[i]=smiley[i];
+       }
+    }
   }
   else
   {

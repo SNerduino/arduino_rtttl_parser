@@ -1,10 +1,14 @@
 // =========================================
-// Library : RTTTL
-// File    : RTTTL.h
-// Author  : Saifeddine ALOUI
-// Description :
-// A library for non blocking RTTTL melody
-// parsing and playing for Arduino applications
+/**
+ * \file RTTTL.h
+ * \brief A library for non blocking RTTTL melody parsing and playing for Arduino applications 
+ * \author Saifeddine ALOUI
+ * \version 1.0
+ * \date 28 october 2017
+ *
+ * Fully featured, non blocking RTTTL parser and player for Arduino boards.
+ *
+ */
 // Note : Methods description Can be found in header file 
 // =========================================
 # include "RTTTL.h"

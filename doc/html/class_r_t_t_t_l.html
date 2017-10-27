@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -71,6 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -111,31 +113,105 @@ $(document).ready(function(){initNavTree('class_r_t_t_t_l.html','');});
 <div class="title">RTTTL Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>The main <a class="el" href="class_r_t_t_t_l.html" title="The main RTTTL class. ">RTTTL</a> class.  
+ <a href="class_r_t_t_t_l.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_r_t_t_t_l_8h_source.html">RTTTL.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af0eb30ab1b129a36d0dfd7910bc225ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0eb30ab1b129a36d0dfd7910bc225ef"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>RTTTL</b> (int buzzerPin)</td></tr>
+<tr class="memitem:af0eb30ab1b129a36d0dfd7910bc225ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_t_t_t_l.html#af0eb30ab1b129a36d0dfd7910bc225ef">RTTTL</a> (int buzzerPin)</td></tr>
+<tr class="memdesc:af0eb30ab1b129a36d0dfd7910bc225ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor of the class.  <a href="#af0eb30ab1b129a36d0dfd7910bc225ef">More...</a><br /></td></tr>
 <tr class="separator:af0eb30ab1b129a36d0dfd7910bc225ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad4616a063ae3cf9073b68c95ec12c3c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aad4616a063ae3cf9073b68c95ec12c3c"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>playMelody</b> (char *melody, int _loop=false)</td></tr>
+<tr class="memitem:aad4616a063ae3cf9073b68c95ec12c3c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_t_t_t_l.html#aad4616a063ae3cf9073b68c95ec12c3c">playMelody</a> (char *melody, int _loop=false)</td></tr>
+<tr class="memdesc:aad4616a063ae3cf9073b68c95ec12c3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start playing a melody.  <a href="#aad4616a063ae3cf9073b68c95ec12c3c">More...</a><br /></td></tr>
 <tr class="separator:aad4616a063ae3cf9073b68c95ec12c3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b3d7b4b4c0a41f7122778bb6f6ff2e7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3b3d7b4b4c0a41f7122778bb6f6ff2e7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pauseMelody</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_t_t_t_l.html#a3b3d7b4b4c0a41f7122778bb6f6ff2e7">pauseMelody</a> ()</td></tr>
+<tr class="memdesc:a3b3d7b4b4c0a41f7122778bb6f6ff2e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggles pause the currently played melody (pause or resume) <br /></td></tr>
 <tr class="separator:a3b3d7b4b4c0a41f7122778bb6f6ff2e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfa13560513942dd3b2ad4cf114050fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adfa13560513942dd3b2ad4cf114050fa"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>tick</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_t_t_t_l.html#adfa13560513942dd3b2ad4cf114050fa">tick</a> ()</td></tr>
+<tr class="memdesc:adfa13560513942dd3b2ad4cf114050fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the <a class="el" href="class_r_t_t_t_l.html" title="The main RTTTL class. ">RTTTL</a> parser iteration (check if next note should be parsed. If yes, parse the note and set time for next note parsing. If nothing to be done, just return). This is a non blocking function. <br /></td></tr>
 <tr class="separator:adfa13560513942dd3b2ad4cf114050fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ad2aff8ea3e0b647e8bcb0d9ddbc9538d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2aff8ea3e0b647e8bcb0d9ddbc9538d"></a>
-<a class="el" href="class_r_t_t_t_l___note_infos.html">RTTTL_NoteInfos</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_currentNote</b></td></tr>
+<a class="el" href="class_r_t_t_t_l___note_infos.html">RTTTL_NoteInfos</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_t_t_t_l.html#ad2aff8ea3e0b647e8bcb0d9ddbc9538d">m_currentNote</a></td></tr>
+<tr class="memdesc:ad2aff8ea3e0b647e8bcb0d9ddbc9538d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This gives information about the current Note being played as well as the status of the last note parsing. <br /></td></tr>
 <tr class="separator:ad2aff8ea3e0b647e8bcb0d9ddbc9538d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2e2eb445ee1dc7e871fd1dad15d7597"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac2e2eb445ee1dc7e871fd1dad15d7597"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>melody_title</b></td></tr>
+char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_t_t_t_l.html#ac2e2eb445ee1dc7e871fd1dad15d7597">melody_title</a></td></tr>
+<tr class="memdesc:ac2e2eb445ee1dc7e871fd1dad15d7597"><td class="mdescLeft">&#160;</td><td class="mdescRight">The title of the current melody. <br /></td></tr>
 <tr class="separator:ac2e2eb445ee1dc7e871fd1dad15d7597"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The main <a class="el" href="class_r_t_t_t_l.html" title="The main RTTTL class. ">RTTTL</a> class. </p>
+<p>The main <a class="el" href="class_r_t_t_t_l.html" title="The main RTTTL class. ">RTTTL</a> class</p>
+<p>Fully featured <a class="el" href="class_r_t_t_t_l.html" title="The main RTTTL class. ">RTTTL</a> parser and player class </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="af0eb30ab1b129a36d0dfd7910bc225ef"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">RTTTL::RTTTL </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>buzzerPin</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The constructor of the class. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buzzerPin</td><td>the pin id that was used for the buzzer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aad4616a063ae3cf9073b68c95ec12c3c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RTTTL::playMelody </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>melody</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>_loop</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Start playing a melody. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">melody</td><td>A null terminated string containing the <a class="el" href="class_r_t_t_t_l.html" title="The main RTTTL class. ">RTTTL</a> code </td></tr>
+    <tr><td class="paramname">_loop</td><td>Tells weather the melody should be indefinitely played. Default = false. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="_r_t_t_t_l_8h_source.html">RTTTL.h</a></li>
 <li>RTTTL.cpp</li>
@@ -146,7 +222,7 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>melody_title</b></t
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_r_t_t_t_l.html">RTTTL</a></li>
-    <li class="footer">Generated on Fri Oct 27 2017 23:56:21 for RTTTL by
+    <li class="footer">Generated on Sat Oct 28 2017 00:31:45 for RTTTL by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>
