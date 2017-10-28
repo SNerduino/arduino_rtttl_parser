@@ -138,6 +138,8 @@ int RTTTL::playMelody(char *melody, int _loop)
 #endif
   m_notePointer = 0;
   m_prev_time=millis();
+  m_currentNote.info = RTTTL_INFO_NONE;
+
   return 0;
 }
 
