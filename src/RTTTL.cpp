@@ -204,7 +204,8 @@ int RTTTL::parseNote(char* note)
 #ifdef RTTTL_DEBUG
       Serial.println(note);
 #endif
-      int base_tones[] = {33, 35,37, 39, 41, 44, 46, 49, 52, 55, 58, 62};
+      int notes[] = { 0, 262, 277, 294, 311, 330, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988,
+1047, 1109, 1175, 1245, 1319, 1397, 1480, 1568, 1661, 1760, 1865, 1976, 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951 };
       int index                       = 0;
       m_currentNote.octave            = m_default_octave;
       m_currentNote.duration          = m_default_duration;
@@ -232,7 +233,8 @@ int RTTTL::parseNote(char* note)
       // Play Note
       if(m_currentNote.note!=12)
       {
-        float finalTone = (440.0 / 32.0) * (pow(2.0,  (((m_currentNote.note+(m_currentNote.octave)*11.0) - 9.0) / 12.0))); //(base_tones[m_currentNote.note])*(m_currentNote.octave+1);
+        //float finalTone = (440.0 / 32.0) * (pow(2.0,  (((m_currentNote.note+(m_currentNote.octave)*11.0) - 9.0) / 12.0))); 
+		int finalTone = (notes[m_currentNote.note+(m_currentNote.octave-4)*12]);
         tone(m_buzzer_pin, finalTone);
       }
       // Set duration 

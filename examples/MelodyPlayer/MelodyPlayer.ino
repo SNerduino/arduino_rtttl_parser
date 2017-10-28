@@ -1,18 +1,23 @@
-/*
-  Sketch : MelodyPlayer
-  Author : Saifeddine ALOUI
-  This is a simple RTTTL melody player to illustrate how useful it is to use this library in a multitask invironment
-  The player setup needs a ELEGOO remote control, 4 leds +  4 resistances 220hms + a buzzer + 300Ohms resistor + infrared receiver
+/**
+ * \file MelodyPlayer.ino
+ * \brief A remote controlled melody player based on RTTTL library
+ * \author Saifeddine ALOUI
+ * \version 2.0
+ * \date 28 october 2017
+ *
+ * Plays melodies and displaying notes using leds. A remote control enables changing the melody, pase and resume.
+ * This is a simple RTTTL melody player to illustrate how useful it is to use this library in a multitask invironment
+ * The player setup needs a ELEGOO remote control, 4 leds +  4 resistances 220hms + a buzzer + 300Ohms resistor + infrared receiver
+ * 
+ * The player is remote controlled using the infrared remote control.
+ * The parsed notes are used to play the leds.
+ *
+ * 3 activities are running in the same time : 
+ *   - our RTTTL library
+ *   - the led switching
+ *   - the remote control signal decoding
   
-  The player is remote controlled using the infrared remote control.
-  The parsed notes are used to play the leds.
-
-  3 activities are running in the same time : 
-    - our RTTTL library
-    - the led switching
-    - the remote control signal decoding
-  
-  This setup was tested on the arduino nano using the ATmega328 microcontroller 
+ * This setup was tested on the arduino nano using the ATmega328 microcontroller 
   
 */
 

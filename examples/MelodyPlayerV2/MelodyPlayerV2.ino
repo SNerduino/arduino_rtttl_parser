@@ -1,3 +1,13 @@
+/**
+ * \file MelodyPlayerV2.ino
+ * \brief A remote controlled melody player based on RTTTL library
+ * \author Saifeddine ALOUI
+ * \version 2.0
+ * \date 28 october 2017
+ *
+ * Plays melodies and displaying notes on a led matrix. A remote control enables changing the melody, pase and resume.
+ *
+ */
 #include <LedControl.h> //  need the library
 /*
  Now we need a LedControl to work with.

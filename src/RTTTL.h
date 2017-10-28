@@ -20,7 +20,7 @@
 // Configurations
 // =========================================
 /// A debug macro. Uncomment if you want to debug the library
-//#define RTTTL_DEBUG
+#define RTTTL_DEBUG
 // =========================================
 // Defines
 // =========================================
