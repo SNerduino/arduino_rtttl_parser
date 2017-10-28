@@ -1,5 +1,5 @@
 var modules =
 [
-    [ "information list", "group___note.html", "group___note" ],
-    [ "stuff", "group___default.html", null ]
+    [ "information list", "d8/dc2/group___note.html", "d8/dc2/group___note" ],
+    [ "stuff", "df/ddd/group___default.html", null ]
 ];
