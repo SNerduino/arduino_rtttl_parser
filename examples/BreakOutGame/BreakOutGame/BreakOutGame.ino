@@ -148,6 +148,18 @@ long gameSpeedTime = 300;
 bool isPlaying=false;
 bool playingMelody=true;
 int lives =5;
+void reset()
+{
+    lives=5;
+    for(int i=0;i<4;i++)
+      bricks[i]=0xFF; // Start Over Again
+    rtttl.playMelody(gameTheme);
+    ballSpd_y = 0;
+    ballSpd_x = 0;
+    ballPos_x = 4;
+    ballPos_y = 6;
+    racketPos = 4;
+}
 void loop() {
   // Call the rtttl parser to update playing status
   rtttl.tick();
@@ -200,9 +212,7 @@ void loop() {
            lives--;
            if(lives == 0)
            {
-            lives=5;
-            for(int i=0;i<4;i++)
-              bricks[i]=0xFF; // Start Over Again
+            reset();
            }
            return;
         }
@@ -217,8 +227,9 @@ void loop() {
           }
           if(ballPos_x==racketPos-1)
           {
-            ballSpd_x = -1;
             ballSpd_y = -1;
+            if(ballSpd_x == 0) 
+              ballSpd_x = -1;
             // Play ping
             rtttl.playMelody(ping);
           }
@@ -232,8 +243,9 @@ void loop() {
     
           if(ballPos_x==racketPos+1)
           {
-            ballSpd_x = 1;
             ballSpd_y = -1;
+            if(ballSpd_x == 0) 
+              ballSpd_x = 1;
             // Play ping
             rtttl.playMelody(ping);
           }
@@ -313,7 +325,13 @@ void loop() {
           break;
         case 0xFF42BD: //7
         if(racketPos>1)
+        {
            racketPos--;
+           if(!isPlaying)
+           {
+              ballPos_x--;            
+           }
+        }
           break;
         case 0xFF4AB5: //8
           rtttl.playMelody(ping);
@@ -322,8 +340,17 @@ void loop() {
           break;
         case 0xFF52AD: //9
         if(racketPos<6)
+        {
            racketPos++;
-          break;
+           if(!isPlaying)
+           {
+              ballPos_x++;            
+           }
+        }
+        break;
+        case 0xFFA25D: //On Off
+        reset();
+        break;
       }
       irrecv.resume(); // Receive the next value
     }
