@@ -129,7 +129,7 @@ public :
 	 * \param melody A null terminated string containing the RTTTL code
 	 * \param _loop Tells weather the melody should be indefinitely played. Default = false.
 	 */
-    int playMelody(char *melody, int _loop=false);
+    int playMelody(char *melody, int _loop=false, bool is_blocking=false);
     /**
 	 * \brief Toggles pause the currently played melody (pause or resume) 
 	 */

@@ -32,7 +32,7 @@ void printint(char * title, int i)
 }
 
 
-int RTTTL::playMelody(char *melody, int _loop)
+int RTTTL::playMelody(char *melody, int _loop, bool is_blocking=false)
 {
   int index=0;
   int totalstrLen;
@@ -140,6 +140,13 @@ int RTTTL::playMelody(char *melody, int _loop)
   m_prev_time=millis();
   m_currentNote.info = RTTTL_INFO_NONE;
 
+  if(is_blocking)
+  {
+    while(m_currentNote.info != RTTTL_INFO_EOM)
+    {
+      this->tick();
+    }
+  }
   return 0;
 }
 
